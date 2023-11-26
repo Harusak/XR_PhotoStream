@@ -8,14 +8,14 @@
   </head>
   <body>
     <a-scene embedded arjs='sourceType: webcam;'>
-      <!-- 回転する写真のグループを作成 -->
-      <a-entity id="photo-ring" rotation="0 0 0"
+      <!-- 回転する球体のグループを作成 -->
+      <a-entity id="sphere-ring" rotation="0 0 0"
                 animation="property: rotation; to: 0 360 0; loop: true; dur: 10000">
-        <!-- 写真1 -->
-        <a-image src="https://live.staticflickr.com/65535/53098018469_eb8b162a71_k.jpg" position="1 0 0" scale="0.5 0.5 0.5"></a-image>
-        <!-- 写真2 -->
-        <a-image src="https://live.staticflickr.com/65535/53309410825_fd5316fca7_k.jpg" position="0 1 0" scale="0.5 0.5 0.5"></a-image>
-        <!-- 追加の写真を配置... -->
+        <!-- 球体1 -->
+        <a-sphere position="1 0 0" radius="0.25" color="red"></a-sphere>
+        <!-- 球体2 -->
+        <a-sphere position="0 1 0" radius="0.25" color="blue"></a-sphere>
+        <!-- 追加の球体を配置... -->
       </a-entity>
 
       <!-- カメラ（ユーザー）の位置 -->
@@ -23,4 +23,3 @@
     </a-scene>
   </body>
 </html>
-
