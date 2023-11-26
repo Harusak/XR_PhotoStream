@@ -7,7 +7,9 @@
     <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar-nft.js"></script>
   </head>
   <body>
-    <a-scene embedded arjs='sourceType: webcam;'>
+    <a-scene 
+        embedded arjs='sourceType: webcam;'
+        vr-mode-ui="enabled: true">
       <!-- 単一の写真 -->
       <a-image src="https://live.staticflickr.com/65535/53098018469_eb8b162a71_k.jpg" position="0 1 -2" scale="1 1 1" look-at="[camera]"></a-image>
 
