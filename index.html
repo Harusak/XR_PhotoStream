@@ -62,11 +62,17 @@
     document.addEventListener('DOMContentLoaded', function() {
         var photoCanvas = document.getElementById('photo-canvas');
         var closeButton = document.getElementById('close-button');
+        var welcomeMessage = document.getElementById('welcome-message');
+
+        // 初期状態では歓迎メッセージを表示
+        photoCanvas.setAttribute('visible', true);
+        welcomeMessage.setAttribute('visible', true);
 
         // クローズボタンのクリックイベントリスナー
         closeButton.addEventListener('click', function() {
             photoCanvas.setAttribute('visible', false);
         });
+
         var radius = 2.5;
         var photoCircle = document.getElementById('photo-circle');
         var photos = []; // 写真要素を格納する配列
