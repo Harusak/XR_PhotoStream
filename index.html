@@ -42,28 +42,38 @@
 
     </a-scene>
     <script>
-        // 写真の数
-        var numberOfPhotos = 10; // 写真の数を調整
-        // 円の半径
-        var radius = 3;
+      // ドキュメントが完全にロードされた後に実行
+      document.addEventListener('DOMContentLoaded', function() {
+          // 写真の数
+          var numberOfPhotos = 10; // 写真の数を調整
+          // 円の半径
+          var radius = 3;
 
-        var photoCircle = document.getElementById('photo-circle');
+          var photoCircle = document.getElementById('photo-circle');
 
-        for (var i = 0; i < numberOfPhotos; i++) {
-            var theta = (i / numberOfPhotos) * Math.PI * 2;
-            var x = radius * Math.cos(theta);
-            var y = 1.5; // Y軸の位置
-            var z = radius * Math.sin(theta);
+          for (var i = 0; i < numberOfPhotos; i++) {
+              var theta = (i / numberOfPhotos) * Math.PI * 2;
+              var x = radius * Math.cos(theta);
+              var y = 1.5; // Y軸の位置
+              var z = radius * Math.sin(theta);
 
-            // 新しいa-image要素を作成
-            var photoEl = document.createElement('a-image');
-            photoEl.setAttribute('src', '#photo' + (i + 1));
-            photoEl.setAttribute('position', {x: x, y: y, z: z});
-            photoEl.setAttribute('look-at', '[camera]');
+              // 新しいa-image要素を作成
+              var photoEl = document.createElement('a-image');
+              photoEl.setAttribute('src', '#photo' + (i + 1));
+              photoEl.setAttribute('position', {x: x, y: y, z: z});
 
-            // 写真円環に追加
-            photoCircle.appendChild(photoEl);
-        }
+              // 写真円環に追加
+              photoCircle.appendChild(photoEl);
+          }
+
+          // 写真がロードされた後に、look-atを適用
+          photoCircle.addEventListener('loaded', function () {
+              var photos = photoCircle.children;
+              for (var i = 0; i < photos.length; i++) {
+                  photos[i].setAttribute('look-at', '[camera]');
+              }
+          });
+      });
     </script>
 </body>
 </html>
