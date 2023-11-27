@@ -46,14 +46,9 @@
 
             <!-- キャンバス -->
             <a-entity id="photo-canvas" position="0 0 -1">
-                <a-plane id="canvas-plane" width="3" height="2" color="#FFF"></a-plane>
+                <a-plane id="canvas-plane" width="3" height="2" color="#FFF,  opacity: 0.8"></a-plane>
                 <!-- 歓迎メッセージ -->
                 <a-text id="welcome-message" value="Welcome" align="center" position="0 0.5 0" scale="2 2 2"></a-text>
-
-                <!-- クローズボタン -->
-                <a-plane id="close-button" position="0 -0.5 0" width="1" height="0.5" color="red">
-                    <a-text value="Close" align="center"></a-text>
-                </a-plane>
             </a-entity>
         </a-camera>
 
@@ -69,10 +64,14 @@
         photoCanvas.setAttribute('visible', true);
         welcomeMessage.setAttribute('visible', true);
 
-        // クローズボタンのクリックイベントリスナー
-        closeButton.addEventListener('click', function() {
-            photoCanvas.setAttribute('visible', false);
+        var photoCanvas = document.getElementById('photo-canvas');
+        var canvasPlane = document.getElementById('canvas-plane');
+
+        // canvas-planeのクリックイベントリスナー
+        canvasPlane.addEventListener('click', function() {
+            photoCanvas.setAttribute('visible', false); // キャンバスを非表示に
         });
+
 
         var radius = 2.5;
         var photoCircle = document.getElementById('photo-circle');
