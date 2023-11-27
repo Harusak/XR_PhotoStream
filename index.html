@@ -48,10 +48,10 @@
 
     <script>
     document.addEventListener('DOMContentLoaded', function() {
-        var radius = 2;
+        var radius = 2.5;
         var photoCircle = document.getElementById('photo-circle');
         var photos = []; // 写真要素を格納する配列
-        var isPhotoZoomed = false; // 拡大表示された写真があるかどうか
+        var zoomedPhoto = null; // 拡大表示された写真
 
         // 写真のIDを配列に格納
         var photoIds = [];
@@ -74,16 +74,18 @@
 
             // クリックイベントリスナーを追加
             photoEl.addEventListener('click', function() {
-                if (!isPhotoZoomed) {
+                if (zoomedPhoto === this) {
+                    // 写真を元の位置とサイズに戻す
+                    resetPhotos();
+                    zoomedPhoto = null;
+                } else {
+                    if (zoomedPhoto) {
+                        resetPhotos();
+                    }
                     // 写真を拡大表示
                     this.setAttribute('scale', {x: 3, y: 3, z: 3});
                     this.setAttribute('position', {x: 0, y: 1.5, z: -4});
-                    stopPhotosAnimation();
-                    isPhotoZoomed = true;
-                } else {
-                    // 写真を元の位置とサイズに戻す
-                    resetPhotos();
-                    isPhotoZoomed = false;
+                    zoomedPhoto = this;
                 }
             });
 
@@ -121,7 +123,6 @@
 
         function resetPhotos() {
             photos.forEach(function(photo, i) {
-                // 写真を元の位置とサイズに戻す
                 var theta = (i / photos.length) * Math.PI * 2;
                 var x = radius * Math.cos(theta);
                 var y = 1.5;
