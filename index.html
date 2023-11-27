@@ -9,7 +9,7 @@
 <body>
     <a-scene>
         <!-- キューブ型の白い部屋 -->
-        <a-box position="0 0 0" width="10" height="4" depth="10" color="#BBB" side="back"></a-box>
+        <a-box position="0 0 0" width="10" height="10" depth="10" color="#BBB" side="back"></a-box>
 
         <a-assets>
             <!-- ここに写真のアセットを追加します -->
@@ -18,7 +18,7 @@
             <!-- 他の写真も同様に追加 -->
         </a-assets>
 
-        <a-entity id="photos" animation="property: rotation; to: 0 360 0; loop: true; dur: 20000">
+        <a-entity id="photos" animation="property: rotation; to: 0 360 0; loop: true; dur: 20000 easing: linear">
           <a-image src="#photo1" position="0 1.5 -3" look-at="[camera]"></a-image>
           <a-image src="#photo2" position="2 1.5 -3" look-at="[camera]"></a-image>
           <!-- 他の写真を追加 -->
