@@ -123,6 +123,7 @@
             canvasPlane.setAttribute('material', 'src', photoSrc); // 写真をキャンバスに設定
             photoCanvas.setAttribute('visible', true); // キャンバスを表示
 
+            stopPhotosAnimation(); // 写真の回転を停止
             zoomedPhoto = photoSrc; // 拡大表示された写真を記録
         }
 
