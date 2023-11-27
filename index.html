@@ -52,6 +52,7 @@
         var photoCircle = document.getElementById('photo-circle');
         var photos = []; // 写真要素を格納する配列
         var zoomedPhoto = null; // 拡大表示された写真
+        var isAnimating = true; // 写真が回転しているかどうか
 
         // 写真のIDを配列に格納
         var photoIds = [];
@@ -74,25 +75,24 @@
 
             // クリックイベントリスナーを追加
             photoEl.addEventListener('click', function() {
-                if (zoomedPhoto === this) {
-                    // 写真を元の位置とサイズに戻す
-                    resetPhotos();
-                    zoomedPhoto = null;
-                } else {
-                    if (zoomedPhoto) {
-                        resetPhotos();
-                    }
-                    // 写真を拡大表示
+                if (!zoomedPhoto) {
+                    // 写真を拡大表示し、回転を停止
                     this.setAttribute('scale', {x: 3, y: 3, z: 3});
                     this.setAttribute('position', {x: 0, y: 1.5, z: -4});
                     stopPhotosAnimation();
                     zoomedPhoto = this;
+                } else {
+                    // 写真を元の位置とサイズに戻し、回転を再開
+                    resetPhotos();
+                    startPhotosAnimation();
+                    zoomedPhoto = null;
                 }
             });
 
             photoCircle.appendChild(photoEl);
             photos.push(photoEl);
         });
+
 
         function setPhotoAspectRatio(photoElement, imgId) {
             var img = document.getElementById(imgId);
@@ -116,10 +116,22 @@
         }
 
         function stopPhotosAnimation() {
-            photos.forEach(function(photo) {
-                // 写真の回転アニメーションを一時停止
-                photo.removeAttribute('animation');
-            });
+            if (isAnimating) {
+                photos.forEach(function(photo) {
+                    photo.removeAttribute('animation');
+                });
+                isAnimating = false;
+            }
+        }
+
+        function startPhotosAnimation() {
+            if (!isAnimating) {
+                photos.forEach(function(photo, i) {
+                    // 写真の回転アニメーションを再開
+                    photo.setAttribute('animation', 'property: rotation; to: 0 360 0; loop: true; dur: 10000');
+                });
+                isAnimating = true;
+            }
         }
 
         function resetPhotos() {
