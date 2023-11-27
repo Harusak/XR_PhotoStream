@@ -100,8 +100,19 @@
 
             // クリックイベントリスナーを追加
             photoEl.addEventListener('click', function() {
-                var photoSrc = this.getAttribute('src');
-                showPhotoOnCanvas(photoSrc);
+                if (!zoomedPhoto) {
+                    var photoSrc = this.getAttribute('src');
+                    showPhotoOnCanvas(photoSrc);
+
+                } else {
+                    // 写真を元の位置とサイズに戻し、回転を再開
+                    resetPhotos();
+                    zoomedPhoto = null;
+                }
+            });
+
+            photoCircle.appendChild(photoEl);
+            photos.push(photoEl);
             });
 
             photoCircle.appendChild(photoEl);
@@ -109,6 +120,7 @@
         });
 
         function showPhotoOnCanvas(photoSrc) {
+            zoomedPhoto = true;
             var photoCanvas = document.getElementById('photo-canvas');
             var canvasPlane = document.getElementById('canvas-plane');
             var camera = document.querySelector('a-camera');
