@@ -8,8 +8,12 @@
 </head>
 <body>
     <a-scene>
-        <!-- キューブ型の白い部屋 -->
-        <a-box position="0 4.5 0" width="10" height="10" depth="10" color="#BBB" side="back"></a-box>
+        <a-assets>
+          <img id="cubeTexture" src="./assets/a.png">
+        </a-assets>
+        <!-- キューブ型の部屋の定義 -->
+        <a-box position="0 0 0" width="10" height="4" depth="10" 
+           material="src: #cubeTexture; repeat: 4 4" side="back"></a-box>
 
         <a-assets>
             <!-- ここに写真のアセットを追加します -->
