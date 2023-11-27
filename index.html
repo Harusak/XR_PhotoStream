@@ -1,18 +1,29 @@
 <!DOCTYPE html>
 <html>
-  <head>
+<head>
     <meta charset="utf-8">
-    <!-- A-FrameとAR.jsのCDN -->
-    <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
-    <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar-nft.js"></script>
-  </head>
-  <body>
-    <a-scene ar>
-      <!-- 単一の写真 -->
-      <a-image src="https://live.staticflickr.com/65535/53098018469_eb8b162a71_k.jpg" position="0 1 -2" scale="1 1 1" look-at="[camera]"></a-image>
+    <title>VR Photo Portfolio</title>
+    <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
+</head>
+<body>
+    <a-scene>
+        <a-assets>
+            <!-- ここに写真のアセットを追加します -->
+            <img id="photo1" src="https://live.staticflickr.com/65535/53098018469_eb8b162a71_k.jpg">
+            <img id="photo2" src="https://live.staticflickr.com/65535/53098018469_eb8b162a71_k.jpg">
+            <!-- 他の写真も同様に追加 -->
+        </a-assets>
 
-      <!-- カメラ（ユーザー）の位置 -->
-      <a-camera stereo="eye: left;"></a-camera>
+        <!-- 写真を配置 -->
+        <a-image src="#photo1" position="0 1.5 -3" rotation="0 0 0"></a-image>
+        <a-image src="#photo2" position="2 1.5 -3" rotation="0 0 0"></a-image>
+        <!-- 他の写真も同様に配置 -->
+
+        <!-- カメラ（ユーザー）の設定 -->
+        <a-camera position="0 1.6 0">
+            <a-cursor></a-cursor>
+        </a-camera>
+
     </a-scene>
-  </body>
+</body>
 </html>
