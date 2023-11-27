@@ -8,6 +8,9 @@
 </head>
 <body>
     <a-scene>
+        <!-- キューブ型の白い部屋 -->
+        <a-box position="0 0 0" width="10" height="4" depth="10" color="#BBB" side="back"></a-box>
+
         <a-assets>
             <!-- ここに写真のアセットを追加します -->
             <img id="photo1" src="https://live.staticflickr.com/65535/53098018469_eb8b162a71_k.jpg">
@@ -15,10 +18,11 @@
             <!-- 他の写真も同様に追加 -->
         </a-assets>
 
-        <!-- 写真を配置 -->
-        <a-image src="#photo1" position="0 1.5 -3" rotation="0 0 0"></a-image>
-        <a-image src="#photo2" position="2 1.5 -3" rotation="0 0 0"></a-image>
-        <!-- 他の写真も同様に配置 -->
+        <a-entity id="photos" animation="property: rotation; to: 0 360 0; loop: true; dur: 20000">
+          <a-image src="#photo1" position="0 1.5 -3" look-at="[camera]"></a-image>
+          <a-image src="#photo2" position="2 1.5 -3" look-at="[camera]"></a-image>
+          <!-- 他の写真を追加 -->
+        </a-entity>
 
         <!-- カメラ（ユーザー）の設定 -->
         <a-camera position="0 1.6 0">
