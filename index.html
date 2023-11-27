@@ -19,13 +19,20 @@
             <!-- ここに写真のアセットを追加します -->
             <img id="photo1" src="https://live.staticflickr.com/65535/53098018469_eb8b162a71_k.jpg">
             <img id="photo2" src="https://live.staticflickr.com/65535/53098018469_eb8b162a71_k.jpg">
+            <img id="photo3" src="https://live.staticflickr.com/65535/53098018469_eb8b162a71_k.jpg">
+            <img id="photo4" src="https://live.staticflickr.com/65535/53098018469_eb8b162a71_k.jpg">
+            <img id="photo5" src="https://live.staticflickr.com/65535/53098018469_eb8b162a71_k.jpg">
+            <img id="photo6" src="https://live.staticflickr.com/65535/53098018469_eb8b162a71_k.jpg">
+            <img id="photo7" src="https://live.staticflickr.com/65535/53098018469_eb8b162a71_k.jpg">
+            <img id="photo8" src="https://live.staticflickr.com/65535/53098018469_eb8b162a71_k.jpg">
+            <img id="photo9" src="https://live.staticflickr.com/65535/53098018469_eb8b162a71_k.jpg">
+            <img id="photo10" src="https://live.staticflickr.com/65535/53098018469_eb8b162a71_k.jpg">
             <!-- 他の写真も同様に追加 -->
         </a-assets>
 
-        <a-entity id="photos" animation="property: rotation; to: 0 360 0; loop: true; dur: 20000 easing: linear">
-          <a-image src="#photo1" position="0 1.5 -3" look-at="[camera]"></a-image>
-          <a-image src="#photo2" position="2 1.5 -3" look-at="[camera]"></a-image>
-          <!-- 他の写真を追加 -->
+        <!-- 写真が回転する円環 -->
+        <a-entity id="photo-circle" rotation="0 0 0"
+            animation="property: rotation; to: 0 360 0; loop: true; dur: 1000; easing: linear">
         </a-entity>
 
         <!-- カメラ（ユーザー）の設定 -->
@@ -34,5 +41,29 @@
         </a-camera>
 
     </a-scene>
+    <script>
+        // 写真の数
+        var numberOfPhotos = 10; // 写真の数を調整
+        // 円の半径
+        var radius = 5;
+
+        var photoCircle = document.getElementById('photo-circle');
+
+        for (var i = 0; i < numberOfPhotos; i++) {
+            var theta = (i / numberOfPhotos) * Math.PI * 2;
+            var x = radius * Math.cos(theta);
+            var y = 1.5; // Y軸の位置
+            var z = radius * Math.sin(theta);
+
+            // 新しいa-image要素を作成
+            var photoEl = document.createElement('a-image');
+            photoEl.setAttribute('src', '#photo' + (i + 1));
+            photoEl.setAttribute('position', {x: x, y: y, z: z});
+            photoEl.setAttribute('look-at', '[camera]');
+
+            // 写真円環に追加
+            photoCircle.appendChild(photoEl);
+        }
+    </script>
 </body>
 </html>
