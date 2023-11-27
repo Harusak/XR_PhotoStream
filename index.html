@@ -51,6 +51,7 @@
         var radius = 2;
         var photoCircle = document.getElementById('photo-circle');
         var photos = []; // 写真要素を格納する配列
+        var isPhotoZoomed = false; // 拡大表示された写真があるかどうか
 
         // 写真のIDを配列に格納
         var photoIds = [];
@@ -59,7 +60,6 @@
             photoIds.push('photo' + i);
         }
 
-
         photoIds.forEach(function(photoId, i) {
             var theta = (i / photoIds.length) * Math.PI * 2;
             var x = radius * Math.cos(theta);
@@ -67,7 +67,6 @@
             var z = radius * Math.sin(theta);
 
             var photoEl = document.createElement('a-image');
-
             photoEl.setAttribute('src', '#' + photoId);
             photoEl.setAttribute('position', {x: x, y: y, z: z});
 
@@ -75,10 +74,17 @@
 
             // クリックイベントリスナーを追加
             photoEl.addEventListener('click', function() {
-                stopPhotosAnimation();
-                // 選択された写真を拡大表示
-                this.setAttribute('scale', {x: 3, y: 3, z: 3}); // スケールを調整して拡大
-                this.setAttribute('position', {x: 0, y: 1.5, z: -4}); // ユーザーの前に配置
+                if (!isPhotoZoomed) {
+                    // 写真を拡大表示
+                    this.setAttribute('scale', {x: 3, y: 3, z: 3});
+                    this.setAttribute('position', {x: 0, y: 1.5, z: -4});
+                    stopPhotosAnimation();
+                    isPhotoZoomed = true;
+                } else {
+                    // 写真を元の位置とサイズに戻す
+                    resetPhotos();
+                    isPhotoZoomed = false;
+                }
             });
 
             photoCircle.appendChild(photoEl);
@@ -112,6 +118,19 @@
                 photo.removeAttribute('animation');
             });
         }
+
+        function resetPhotos() {
+            photos.forEach(function(photo, i) {
+                // 写真を元の位置とサイズに戻す
+                var theta = (i / photos.length) * Math.PI * 2;
+                var x = radius * Math.cos(theta);
+                var y = 1.5;
+                var z = radius * Math.sin(theta);
+                photo.setAttribute('position', {x: x, y: y, z: z});
+                photo.setAttribute('scale', {x: 1, y: 1, z: 1});
+            });
+        }
+
         AFRAME.registerComponent('photo-look-at', {
             tick: function() {
                 updatePhotos();
