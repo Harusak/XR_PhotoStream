@@ -40,11 +40,19 @@
             animation="property: rotation; to: 0 360 0; loop: true; dur: 20000; easing: linear">
         </a-entity>
 
-        <!-- カメラ（ユーザー）の設定 -->
-        <a-camera position="0 1.6 0">
+        <!-- カメラ -->
+        <a-camera>
             <a-cursor></a-cursor>
-            <a-entity id="photo-canvas" position="0 0 -1" visible="false">
-                <a-plane id="canvas-plane" width="3" height="2" color="#FFF"></a-plane>
+
+            <!-- キャンバス -->
+            <a-entity id="photo-canvas" position="0 0 -1">
+                <!-- 歓迎メッセージ -->
+                <a-text id="welcome-message" value="Welcome" align="center" position="0 0.5 0" scale="2 2 2"></a-text>
+
+                <!-- クローズボタン -->
+                <a-plane id="close-button" position="0 -0.5 0" width="1" height="0.5" color="red">
+                    <a-text value="Close" align="center"></a-text>
+                </a-plane>
             </a-entity>
         </a-camera>
 
@@ -52,6 +60,13 @@
 
     <script>
     document.addEventListener('DOMContentLoaded', function() {
+        var photoCanvas = document.getElementById('photo-canvas');
+        var closeButton = document.getElementById('close-button');
+
+        // クローズボタンのクリックイベントリスナー
+        closeButton.addEventListener('click', function() {
+            photoCanvas.setAttribute('visible', false);
+        });
         var radius = 2.5;
         var photoCircle = document.getElementById('photo-circle');
         var photos = []; // 写真要素を格納する配列
@@ -91,6 +106,9 @@
             var photoCanvas = document.getElementById('photo-canvas');
             var canvasPlane = document.getElementById('canvas-plane');
             var camera = document.querySelector('a-camera');
+
+            var welcomeMessage = document.getElementById('welcome-message');
+            welcomeMessage.setAttribute('visible', false); // 歓迎メッセージを非表示に
 
             // キャンバスをカメラの目の前に配置
             photoCanvas.object3D.position.setFromMatrixPosition(camera.object3D.matrixWorld);
