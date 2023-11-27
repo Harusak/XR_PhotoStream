@@ -117,19 +117,16 @@
 
         function stopPhotosAnimation() {
             if (isAnimating) {
-                photos.forEach(function(photo) {
-                    photo.removeAttribute('animation');
-                });
+                var photoCircle = document.getElementById('photo-circle');
+                photoCircle.removeAttribute('animation');
                 isAnimating = false;
             }
         }
 
         function startPhotosAnimation() {
             if (!isAnimating) {
-                photos.forEach(function(photo, i) {
-                    // 写真の回転アニメーションを再開
-                    photo.setAttribute('animation', 'property: rotation; to: 0 360 0; loop: true; dur: 10000');
-                });
+                var photoCircle = document.getElementById('photo-circle');
+                photoCircle.setAttribute('animation', 'property: rotation; to: 0 360 0; loop: true; dur: 20000; easing: linear');
                 isAnimating = true;
             }
         }
