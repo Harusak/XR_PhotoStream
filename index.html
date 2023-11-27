@@ -49,7 +49,11 @@
         var photos = []; // 写真要素を格納する配列
 
         // 写真のIDを配列に格納
-        var photoIds = ['photo1', 'photo2', /* 他の写真IDを追加 */];
+        var photoIds = [];
+        var numberOfPhotos = 10; // 写真の枚数
+        for (var i = 1; i <= numberOfPhotos; i++) {
+            photoIds.push('photo' + i);
+        }
 
         photoIds.forEach(function(photoId, i) {
             var theta = (i / photoIds.length) * Math.PI * 2;
