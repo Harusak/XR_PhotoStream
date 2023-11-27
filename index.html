@@ -41,17 +41,14 @@
         </a-camera>
 
     </a-scene>
+
     <script>
-    // ドキュメントが完全にロードされた後に実行
     document.addEventListener('DOMContentLoaded', function() {
-        // 写真の数
         var numberOfPhotos = 10; // 写真の数を調整
-        // 円の半径
         var radius = 3;
-
         var photoCircle = document.getElementById('photo-circle');
+        var photos = []; // 写真要素を格納する配列
 
-        var photos = [];
         for (var i = 0; i < numberOfPhotos; i++) {
             var theta = (i / numberOfPhotos) * Math.PI * 2;
             var x = radius * Math.cos(theta);
@@ -63,23 +60,34 @@
             photoEl.setAttribute('src', '#photo' + (i + 1));
             photoEl.setAttribute('position', {x: x, y: y, z: z});
 
-            // 写真円環に追加
+            // 写真のアスペクト比を設定
+            setPhotoAspectRatio(photoEl, 'path_to_photo' + (i + 1) + '.jpg');
+
+            // 写真円環に追加し、配列に格納
             photoCircle.appendChild(photoEl);
             photos.push(photoEl);
         }
 
-        // 写真の向きを動的に更新する
+        function setPhotoAspectRatio(photoElement, src) {
+            var img = new Image();
+            img.onload = function() {
+                var aspectRatio = img.width / img.height;
+                photoElement.setAttribute('width', aspectRatio);
+                photoElement.setAttribute('height', 1);
+            };
+            img.src = src;
+        }
+
+        // 写真の向きを動的に更新する関数
         function updatePhotos() {
             photos.forEach(function(photo) {
-                var position = photo.object3D.position;
                 var camera = document.querySelector('[camera]').object3D.position;
-
                 var target = new THREE.Vector3(camera.x, camera.y, camera.z);
                 photo.object3D.lookAt(target);
             });
         }
 
-        // アニメーションループにフックする
+        // アニメーションループにフックするコンポーネント
         AFRAME.registerComponent('photo-look-at', {
             tick: function() {
                 updatePhotos();
