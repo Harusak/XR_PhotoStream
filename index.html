@@ -44,41 +44,42 @@
 
     <script>
     document.addEventListener('DOMContentLoaded', function() {
-        var numberOfPhotos = 10; // 写真の数を調整
         var radius = 3;
         var photoCircle = document.getElementById('photo-circle');
         var photos = []; // 写真要素を格納する配列
 
-        for (var i = 0; i < numberOfPhotos; i++) {
-            var theta = (i / numberOfPhotos) * Math.PI * 2;
+        // 写真のIDを配列に格納
+        var photoIds = ['photo1', 'photo2', /* 他の写真IDを追加 */];
+
+        photoIds.forEach(function(photoId, i) {
+            var theta = (i / photoIds.length) * Math.PI * 2;
             var x = radius * Math.cos(theta);
-            var y = 1.5; // Y軸の位置
+            var y = 1.5;
             var z = radius * Math.sin(theta);
 
-            // 新しいa-image要素を作成
             var photoEl = document.createElement('a-image');
-            photoEl.setAttribute('src', '#photo' + (i + 1));
+            photoEl.setAttribute('src', '#' + photoId);
             photoEl.setAttribute('position', {x: x, y: y, z: z});
 
-            // 写真のアスペクト比を設定
-            setPhotoAspectRatio(photoEl, 'path_to_photo' + (i + 1) + '.jpg');
+            setPhotoAspectRatio(photoEl, photoId);
 
-            // 写真円環に追加し、配列に格納
             photoCircle.appendChild(photoEl);
             photos.push(photoEl);
-        }
+        });
 
-        function setPhotoAspectRatio(photoElement, src) {
-            var img = new Image();
-            img.onload = function() {
-                var aspectRatio = img.width / img.height;
+        function setPhotoAspectRatio(photoElement, imgId) {
+            var img = document.getElementById(imgId);
+            var src = img.src; // 実際の画像ファイルのパスを取得
+
+            var tempImg = new Image();
+            tempImg.onload = function() {
+                var aspectRatio = tempImg.width / tempImg.height;
                 photoElement.setAttribute('width', aspectRatio);
                 photoElement.setAttribute('height', 1);
             };
-            img.src = src;
+            tempImg.src = src;
         }
 
-        // 写真の向きを動的に更新する関数
         function updatePhotos() {
             photos.forEach(function(photo) {
                 var camera = document.querySelector('[camera]').object3D.position;
@@ -87,14 +88,12 @@
             });
         }
 
-        // アニメーションループにフックするコンポーネント
         AFRAME.registerComponent('photo-look-at', {
             tick: function() {
                 updatePhotos();
             }
         });
 
-        // 写真円環にコンポーネントを適用
         photoCircle.setAttribute('photo-look-at', '');
       });
     </script>
