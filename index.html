@@ -115,28 +115,38 @@
             photos.push(photoEl);
             });
 
-            photoCircle.appendChild(photoEl);
-            photos.push(photoEl);
-        });
-
         function showPhotoOnCanvas(photoSrc) {
             zoomedPhoto = true;
             var photoCanvas = document.getElementById('photo-canvas');
             var canvasPlane = document.getElementById('canvas-plane');
             var camera = document.querySelector('a-camera');
 
+            // カメラの正面方向に1メートル離れた位置を計算
+            var cameraWorldPosition = new THREE.Vector3();
+            camera.object3D.getWorldPosition(cameraWorldPosition);
+
             var welcomeMessage = document.getElementById('welcome-message');
             welcomeMessage.setAttribute('visible', false); // 歓迎メッセージを非表示に
 
-            // キャンバスをカメラの目の前に配置
-            photoCanvas.object3D.position.setFromMatrixPosition(camera.object3D.matrixWorld);
+
+            var cameraWorldQuaternion = new THREE.Quaternion();
+            camera.object3D.getWorldQuaternion(cameraWorldQuaternion);
+
+            var direction = new THREE.Vector3(0, 0, -1); // カメラの正面方向、1メートル前方
+            direction.applyQuaternion(cameraWorldQuaternion);
+            direction.add(cameraWorldPosition);
+
+            photoCanvas.object3D.position.copy(direction);
             photoCanvas.object3D.rotation.copy(camera.object3D.rotation);
 
-            canvasPlane.setAttribute('material', 'src', photoSrc); // 写真をキャンバスに設定
-            photoCanvas.setAttribute('visible', true); // キャンバスを表示
+            // キャンバスに写真を設定して表示
+            canvasPlane.setAttribute('material', 'src', photoSrc);
+            photoCanvas.setAttribute('visible', true);
 
-            stopPhotosAnimation(); // 写真の回転を停止
+            // 写真の回転を停止
+            // stopPhotosAnimation();
             zoomedPhoto = photoSrc; // 拡大表示された写真を記録
+
         }
 
         function setPhotoAspectRatio(photoElement, imgId) {
