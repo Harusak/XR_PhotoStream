@@ -12,6 +12,13 @@
         <a-entity oculus-touch-controls="hand: left"></a-entity>
         <!-- 右手のコントローラ -->
         <a-entity oculus-touch-controls="hand: right"></a-entity>
+
+        <!-- カメラの目の前に配置するキャンバス -->
+        <a-entity id="photo-canvas" position="0 1.6 -1" visible="false">
+            <a-plane id="canvas-plane" width="3" height="2" color="#FFF"></a-plane>
+        </a-entity>
+
+
         <a-assets>
           <img id="cubeTexture" src="./assets/a.png">
         </a-assets>
@@ -42,6 +49,9 @@
         <!-- カメラ（ユーザー）の設定 -->
         <a-camera position="0 1.6 0">
             <a-cursor></a-cursor>
+            <a-entity id="photo-canvas" position="0 0 -1" visible="false">
+                <a-plane id="canvas-plane" width="3" height="2" color="#FFF"></a-plane>
+            </a-entity>
         </a-camera>
 
     </a-scene>
@@ -75,24 +85,29 @@
 
             // クリックイベントリスナーを追加
             photoEl.addEventListener('click', function() {
-                if (!zoomedPhoto) {
-                    // 写真を拡大表示し、回転を停止
-                    this.setAttribute('scale', {x: 3, y: 3, z: 3});
-                    this.setAttribute('position', {x: 0, y: 1.5, z: -4});
-                    stopPhotosAnimation();
-                    zoomedPhoto = this;
-                } else {
-                    // 写真を元の位置とサイズに戻し、回転を再開
-                    resetPhotos();
-                    startPhotosAnimation();
-                    zoomedPhoto = null;
-                }
+                var photoSrc = this.getAttribute('src');
+                showPhotoOnCanvas(photoSrc);
             });
 
             photoCircle.appendChild(photoEl);
             photos.push(photoEl);
         });
 
+        function showPhotoOnCanvas(photoSrc) {
+            var photoCanvas = document.getElementById('photo-canvas');
+            var canvasPlane = document.getElementById('canvas-plane');
+            var camera = document.querySelector('a-camera');
+
+            // キャンバスをカメラの目の前に配置
+            photoCanvas.object3D.position.setFromMatrixPosition(camera.object3D.matrixWorld);
+            photoCanvas.object3D.rotation.copy(camera.object3D.rotation);
+
+            canvasPlane.setAttribute('material', 'src', photoSrc); // 写真をキャンバスに設定
+            photoCanvas.setAttribute('visible', true); // キャンバスを表示
+
+            stopPhotosAnimation(); // 写真の回転を停止
+            zoomedPhoto = photoSrc; // 拡大表示された写真を記録
+        }
 
         function setPhotoAspectRatio(photoElement, imgId) {
             var img = document.getElementById(imgId);
@@ -140,6 +155,9 @@
                 photo.setAttribute('position', {x: x, y: y, z: z});
                 photo.setAttribute('scale', {x: 1, y: 1, z: 1});
             });
+
+            var photoCanvas = document.getElementById('photo-canvas');
+            photoCanvas.setAttribute('visible', false); // キャンバスを非表示に
         }
 
         AFRAME.registerComponent('photo-look-at', {
