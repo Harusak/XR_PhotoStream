@@ -8,6 +8,10 @@
 </head>
 <body>
     <a-scene>
+        <!-- 左手のコントローラ -->
+        <a-entity oculus-touch-controls="hand: left"></a-entity>
+        <!-- 右手のコントローラ -->
+        <a-entity oculus-touch-controls="hand: right"></a-entity>
         <a-assets>
           <img id="cubeTexture" src="./assets/a.png">
         </a-assets>
@@ -44,7 +48,7 @@
 
     <script>
     document.addEventListener('DOMContentLoaded', function() {
-        var radius = 3;
+        var radius = 2;
         var photoCircle = document.getElementById('photo-circle');
         var photos = []; // 写真要素を格納する配列
 
@@ -63,10 +67,19 @@
             var z = radius * Math.sin(theta);
 
             var photoEl = document.createElement('a-image');
+
             photoEl.setAttribute('src', '#' + photoId);
             photoEl.setAttribute('position', {x: x, y: y, z: z});
 
             setPhotoAspectRatio(photoEl, photoId);
+
+            // クリックイベントリスナーを追加
+            photoEl.addEventListener('click', function() {
+                stopPhotosAnimation();
+                // 選択された写真を拡大表示
+                this.setAttribute('scale', {x: 3, y: 3, z: 3}); // スケールを調整して拡大
+                this.setAttribute('position', {x: 0, y: 1.5, z: -4}); // ユーザーの前に配置
+            });
 
             photoCircle.appendChild(photoEl);
             photos.push(photoEl);
@@ -93,6 +106,12 @@
             });
         }
 
+        function stopPhotosAnimation() {
+            photos.forEach(function(photo) {
+                // 写真の回転アニメーションを一時停止
+                photo.removeAttribute('animation');
+            });
+        }
         AFRAME.registerComponent('photo-look-at', {
             tick: function() {
                 updatePhotos();
