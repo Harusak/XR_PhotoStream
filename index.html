@@ -46,7 +46,7 @@
 
             <!-- キャンバス -->
             <a-entity id="photo-canvas" position="0 0 -1">
-                <a-plane id="canvas-plane" width="3" height="2" color="#FFF,  opacity: 0.8"></a-plane>
+                <a-plane id="canvas-plane" width="3" height="2" color="#000, opacity: 0.2"></a-plane>
                 <!-- 歓迎メッセージ -->
                 <a-text id="welcome-message" value="Welcome" align="center" position="0 0.5 0" scale="2 2 2"></a-text>
             </a-entity>
@@ -123,7 +123,6 @@
             canvasPlane.setAttribute('material', 'src', photoSrc); // 写真をキャンバスに設定
             photoCanvas.setAttribute('visible', true); // キャンバスを表示
 
-            stopPhotosAnimation(); // 写真の回転を停止
             zoomedPhoto = photoSrc; // 拡大表示された写真を記録
         }
 
