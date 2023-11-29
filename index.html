@@ -14,6 +14,11 @@
         <!-- 右手のコントローラ -->
         <a-entity oculus-touch-controls="hand: right"></a-entity>
 
+        <!-- マスク用の平面エンティティを追加 -->
+        <a-entity id="mask" position="0 1.6 -2">
+            <a-plane width="5" height="4" color="black" opacity="0"></a-plane>
+        </a-entity>
+
         <a-assets>
           <img id="cubeTexture" src="./assets/a.png">
         </a-assets>
@@ -46,86 +51,57 @@
             <a-cursor></a-cursor>
         </a-camera>
 
-    </a-scene>
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                var sceneEl = document.querySelector('a-scene');
+                sceneEl.addEventListener('loaded', function() {
+                    var windowEntity = document.getElementById('window');
+                    var photoSpacing = 1.5;
+                    var photoStartX = -5;
 
-    <script>
-        AFRAME.registerComponent('fade-edge', {
-            tick: function() {
-                var windowPlaneEl = document.getElementById('window-plane');
-                var windowPosition = windowPlaneEl.object3D.position;
-                var windowWidth = windowPlaneEl.getAttribute('width');
+                    // <a-assets>内のすべての<img>要素のIDを取得
+                    var photoIds = Array.from(document.querySelectorAll('a-assets img')).map(function(img) {
+                        return img.id;
+                    });
 
-                // ウィンドウの左右端の座標を計算
-                var leftEdge = windowPosition.x - windowWidth / 2 - 0.1;
-                var rightEdge = windowPosition.x + windowWidth / 2 + 0.1;
+                    // 写真の生成と配置
+                    for (var i = 0; i < photoIds.length; i++) {
+                        var photoEl = document.createElement('a-image');
+                        photoEl.setAttribute('src', '#' + photoIds[i]);
 
-                var photos = document.querySelectorAll('[fade-edge]');
-                photos.forEach(function(photo) {
-                    var photoPosition = photo.object3D.position.x;
+                        var xPosition = photoStartX + i * photoSpacing;
+                        photoEl.setAttribute('position', { x: xPosition, y: 0, z: 0.1 }); // マスク内部の位置を設定
 
-                    // ウィンドウの範囲外にある場合、透明度を下げる
-                    if (photoPosition < leftEdge || photoPosition > rightEdge) {
-                        var opacity = Math.max(0, 1 - Math.abs(photoPosition - windowPosition.x) / 0.1);
-                        photo.setAttribute('material', 'opacity', opacity);
-                    } else {
-                        // ウィンドウの範囲内にある場合、透明度を1に設定
-                        photo.setAttribute('material', 'opacity', 1);
+                        setPhotoAspectRatio(photoEl, photoIds[i]); // アスペクト比を設定
+
+                        // アニメーション設定
+                        photoEl.setAttribute('animation', {
+                            property: 'position',
+                            to: { x: xPosition - 10, y: 0, z: 0.1 },
+                            loop: true,
+                            dur: 20000,
+                            easing: 'linear'
+                        });
+
+                        windowEntity.appendChild(photoEl);
                     }
                 });
-            }
-        });
-        document.addEventListener('DOMContentLoaded', function() {
-        var sceneEl = document.querySelector('a-scene');
-        sceneEl.addEventListener('loaded', function() {
-            var windowEntity = document.getElementById('window');
-            var photoSpacing = 1.5; // 写真間の間隔
-            var photoStartX = -5; // 最初の写真のX座標の開始位置
 
-            // <a-assets>内のすべての<img>要素のIDを取得
-            var photoIds = Array.from(document.querySelectorAll('a-assets img')).map(function(img) {
-                return img.id;
+                function setPhotoAspectRatio(photoElement, imgId) {
+                    var img = document.getElementById(imgId);
+                    var src = img.src;
+
+                    var tempImg = new Image();
+                    tempImg.onload = function() {
+                        var aspectRatio = tempImg.width / tempImg.height;
+                        photoElement.setAttribute('width', aspectRatio);
+                        photoElement.setAttribute('height', 1);
+                    };
+                    tempImg.src = src;
+                }
             });
-
-            // 写真の生成と配置
-            for (var i = 0; i < photoIds.length; i++) {
-                var photoEl = document.createElement('a-image');
-                photoEl.setAttribute('src', '#' + photoIds[i]);
-
-                // 写真のX座標を計算
-                var xPosition = photoStartX + i * photoSpacing;
-                photoEl.setAttribute('position', { x: xPosition, y: 1.6, z: 0.5 }); // 写真の位置を設定
-
-                setPhotoAspectRatio(photoEl, photoIds[i]); // 写真のアスペクト比を設定
-
-                // 写真のアニメーション設定
-                photoEl.setAttribute('animation', {
-                    property: 'position',
-                    to: { x: xPosition - 20, y: 1.6, z: -2.0 },
-                    loop: true,
-                    dur: 20000,
-                    easing: 'linear'
-                });
-
-                photoEl.setAttribute('fade-edge', ''); // fade-edgeコンポーネントを追加
-                windowEntity.appendChild(photoEl);
-            }
-        });
-    });
-
-    // 写真のアスペクト比を設定
-    function setPhotoAspectRatio(photoElement, imgId) {
-        var img = document.getElementById(imgId);
-        var src = img.src;
-
-        var tempImg = new Image();
-        tempImg.onload = function() {
-            var aspectRatio = tempImg.width / tempImg.height;
-            photoElement.setAttribute('width', aspectRatio);
-            photoElement.setAttribute('height', 1);
-        };
-        tempImg.src = src;
-    }
-    </script>
+        </script>
+    </a-scene>
 
 </body>
 </html>
