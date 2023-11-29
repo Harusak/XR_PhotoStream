@@ -49,33 +49,6 @@
     </a-scene>
 
     <script>
-    AFRAME.registerComponent('fade-edge', {
-        tick: function() {
-            var windowPlaneEl = document.getElementById('window-plane');
-            var windowPosition = windowPlaneEl.object3D.position;
-            var windowWidth = windowPlaneEl.getAttribute('width');
-
-            // ウィンドウの左右端の座標を計算
-            var leftEdge = windowPosition.x - windowWidth / 2 - 0.1;
-            var rightEdge = windowPosition.x + windowWidth / 2 + 0.1;
-
-            var photos = document.querySelectorAll('[fade-edge]');
-            photos.forEach(function(photo) {
-                var photoPosition = photo.object3D.position.x;
-
-                // ウィンドウの範囲外にある場合、透明度を下げる
-                if (photoPosition < leftEdge || photoPosition > rightEdge) {
-                    var opacity = Math.max(0, 1 - Math.abs(photoPosition - windowPosition.x) / 0.1);
-                    photo.setAttribute('material', 'opacity', opacity);
-                } else {
-                    // ウィンドウの範囲内にある場合、透明度を1に設定
-                    photo.setAttribute('material', 'opacity', 1);
-                }
-            });
-        }
-    });
-
-
     document.addEventListener('DOMContentLoaded', function() {
         var sceneEl = document.querySelector('a-scene');
         sceneEl.addEventListener('loaded', function() {
@@ -93,12 +66,14 @@
                 var photoEl = document.createElement('a-image');
                 photoEl.setAttribute('src', '#' + photoIds[i]);
                 var xPosition = startOffset + i * photoSpacing;
-                photoEl.setAttribute('position', { x: xPosition, y: 1.6, z: -1.9 });
+                photoEl.setAttribute('position', { x: xPosition, y: 1.6, z: -1.9 }); // 写真の位置を設定
+
+                setPhotoAspectRatio(photoEl, photoIds[i]); // 写真のアスペクト比を設定
 
                 // 写真のアニメーション設定
                 photoEl.setAttribute('animation', {
                     property: 'position',
-                    to: { x: xPosition - 10, y: 1.6, z: -2.1 },
+                    to: { x: xPosition - 10, y: 1.6, z: -1.9 },
                     loop: true,
                     dur: 10000,
                     easing: 'linear'
@@ -109,8 +84,21 @@
             }
         });
     });
-    </script>
 
+    // 写真のアスペクト比を設定
+    function setPhotoAspectRatio(photoElement, imgId) {
+        var img = document.getElementById(imgId);
+        var src = img.src;
+
+        var tempImg = new Image();
+        tempImg.onload = function() {
+            var aspectRatio = tempImg.width / tempImg.height;
+            photoElement.setAttribute('width', aspectRatio);
+            photoElement.setAttribute('height', 1);
+        };
+        tempImg.src = src;
+    }
+    </script>
 
 </body>
 </html>
