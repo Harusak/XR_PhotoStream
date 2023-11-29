@@ -49,12 +49,37 @@
     </a-scene>
 
     <script>
-    document.addEventListener('DOMContentLoaded', function() {
+        AFRAME.registerComponent('fade-edge', {
+            tick: function() {
+                var windowPlaneEl = document.getElementById('window-plane');
+                var windowPosition = windowPlaneEl.object3D.position;
+                var windowWidth = windowPlaneEl.getAttribute('width');
+
+                // ウィンドウの左右端の座標を計算
+                var leftEdge = windowPosition.x - windowWidth / 2 - 0.1;
+                var rightEdge = windowPosition.x + windowWidth / 2 + 0.1;
+
+                var photos = document.querySelectorAll('[fade-edge]');
+                photos.forEach(function(photo) {
+                    var photoPosition = photo.object3D.position.x;
+
+                    // ウィンドウの範囲外にある場合、透明度を下げる
+                    if (photoPosition < leftEdge || photoPosition > rightEdge) {
+                        var opacity = Math.max(0, 1 - Math.abs(photoPosition - windowPosition.x) / 0.1);
+                        photo.setAttribute('material', 'opacity', opacity);
+                    } else {
+                        // ウィンドウの範囲内にある場合、透明度を1に設定
+                        photo.setAttribute('material', 'opacity', 1);
+                    }
+                });
+            }
+        });
+        document.addEventListener('DOMContentLoaded', function() {
         var sceneEl = document.querySelector('a-scene');
         sceneEl.addEventListener('loaded', function() {
             var windowEntity = document.getElementById('window');
             var photoSpacing = 1.5; // 写真間の間隔
-            var startOffset = 5; // 最初の写真の開始位置
+            var photoStartX = -5; // 最初の写真のX座標の開始位置
 
             // <a-assets>内のすべての<img>要素のIDを取得
             var photoIds = Array.from(document.querySelectorAll('a-assets img')).map(function(img) {
@@ -65,17 +90,19 @@
             for (var i = 0; i < photoIds.length; i++) {
                 var photoEl = document.createElement('a-image');
                 photoEl.setAttribute('src', '#' + photoIds[i]);
-                var xPosition = startOffset + i * photoSpacing;
-                photoEl.setAttribute('position', { x: xPosition, y: 1.6, z: -1.9 }); // 写真の位置を設定
+
+                // 写真のX座標を計算
+                var xPosition = photoStartX + i * photoSpacing;
+                photoEl.setAttribute('position', { x: xPosition, y: 1.6, z: -2.0 }); // 写真の位置を設定
 
                 setPhotoAspectRatio(photoEl, photoIds[i]); // 写真のアスペクト比を設定
 
                 // 写真のアニメーション設定
                 photoEl.setAttribute('animation', {
                     property: 'position',
-                    to: { x: xPosition - 10, y: 1.6, z: -1.9 },
+                    to: { x: xPosition - 20, y: 1.6, z: -2.0 },
                     loop: true,
-                    dur: 10000,
+                    dur: 20000,
                     easing: 'linear'
                 });
 
