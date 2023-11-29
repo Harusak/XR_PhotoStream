@@ -49,30 +49,31 @@
 
     <script>
     AFRAME.registerComponent('fade-edge', {
-    tick: function() {
-        var windowEl = document.getElementById('window');
-        var windowPosition = windowEl.object3D.position;
-        var windowWidth = windowEl.getAttribute('geometry').width;
+        tick: function() {
+            var windowPlaneEl = document.getElementById('window-plane');
+            var windowPosition = windowPlaneEl.object3D.position;
+            var windowWidth = windowPlaneEl.getAttribute('width');
 
-        // ウィンドウの左右端の座標を計算
-        var leftEdge = windowPosition.x - windowWidth / 2 - 0.1;
-        var rightEdge = windowPosition.x + windowWidth / 2 + 0.1;
+            // ウィンドウの左右端の座標を計算
+            var leftEdge = windowPosition.x - windowWidth / 2 - 0.1;
+            var rightEdge = windowPosition.x + windowWidth / 2 + 0.1;
 
-        var photos = document.querySelectorAll('[fade-edge]');
-        photos.forEach(function(photo) {
-            var photoPosition = photo.object3D.position.x;
+            var photos = document.querySelectorAll('[fade-edge]');
+            photos.forEach(function(photo) {
+                var photoPosition = photo.object3D.position.x;
 
-            // ウィンドウの範囲外にある場合、透明度を下げる
-            if (photoPosition < leftEdge || photoPosition > rightEdge) {
-                var opacity = Math.max(0, 1 - Math.abs(photoPosition - windowPosition.x) / 0.1);
-                photo.setAttribute('material', 'opacity', opacity);
-            } else {
-                // ウィンドウの範囲内にある場合、透明度を1に設定
-                photo.setAttribute('material', 'opacity', 1);
-            }
-        });
-    }
+                // ウィンドウの範囲外にある場合、透明度を下げる
+                if (photoPosition < leftEdge || photoPosition > rightEdge) {
+                    var opacity = Math.max(0, 1 - Math.abs(photoPosition - windowPosition.x) / 0.1);
+                    photo.setAttribute('material', 'opacity', opacity);
+                } else {
+                    // ウィンドウの範囲内にある場合、透明度を1に設定
+                    photo.setAttribute('material', 'opacity', 1);
+                }
+            });
+        }
     });
+
 
     document.addEventListener('DOMContentLoaded', function() {
         var windowEntity = document.getElementById('window');
