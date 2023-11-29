@@ -59,52 +59,61 @@
         </a-camera>
 
         <script>
+            AFRAME.registerComponent('scroll-photos', {
+                schema: {
+                    speed: {type: 'number', default: 1}
+                },
+
+                init: function() {
+                    this.el.sceneEl.addEventListener('axismove', this.onAxisMove.bind(this));
+                    this.xPosition = 0;
+                },
+
+                onAxisMove: function(evt) {
+                    var x = evt.detail.axis[2]; // Oculus Touchの右ジョイスティックのx軸
+                    this.xPosition += x * this.data.speed;
+                    this.updatePhotoPositions();
+                },
+
+                updatePhotoPositions: function() {
+                    var photoEls = this.el.querySelectorAll('a-image');
+                    photoEls.forEach((photoEl, i) => {
+                        var originalX = -5 + i * 1.5; // 元々のX座標
+                        photoEl.setAttribute('position', { x: originalX + this.xPosition, y: 0, z: 0.1 });
+                    });
+                }
+            });
+
             document.addEventListener('DOMContentLoaded', function() {
                 var sceneEl = document.querySelector('a-scene');
                 sceneEl.addEventListener('loaded', function() {
                     var windowEntity = document.getElementById('window');
-                    var photoSpacing = 1.5;
-                    var photoStartX = -5;
+                    windowEntity.setAttribute('scroll-photos', ''); // スクロールコンポーネントを追加
 
                     // <a-assets>内のすべての<img>要素のIDを取得
-                    var photoIds = Array.from(document.querySelectorAll('a-assets img')).map(function(img) {
-                        return img.id;
-                    });
+                    var photoIds = Array.from(document.querySelectorAll('a-assets img')).map(img => img.id);
 
                     // 写真の生成と配置
-                    for (var i = 0; i < photoIds.length; i++) {
+                    photoIds.forEach((imgId, i) => {
                         var photoEl = document.createElement('a-image');
-                        photoEl.setAttribute('src', '#' + photoIds[i]);
+                        photoEl.setAttribute('src', '#' + imgId);
+                        var xPosition = -5 + i * 1.5;
+                        photoEl.setAttribute('position', { x: xPosition, y: 0, z: 0.1 });
 
-                        var xPosition = photoStartX + i * photoSpacing;
-                        photoEl.setAttribute('position', { x: xPosition, y: 0, z: 0.1 }); // マスク内部の位置を設定
-
-                        setPhotoAspectRatio(photoEl, photoIds[i]); // アスペクト比を設定
-
-                        // アニメーション設定
-                        photoEl.setAttribute('animation', {
-                            property: 'position',
-                            to: { x: xPosition - 10, y: 0, z: 0.1 },
-                            loop: true,
-                            dur: 20000,
-                            easing: 'linear'
-                        });
-
+                        setPhotoAspectRatio(photoEl, imgId);
                         windowEntity.appendChild(photoEl);
-                    }
+                    });
                 });
 
                 function setPhotoAspectRatio(photoElement, imgId) {
                     var img = document.getElementById(imgId);
-                    var src = img.src;
-
                     var tempImg = new Image();
                     tempImg.onload = function() {
                         var aspectRatio = tempImg.width / tempImg.height;
                         photoElement.setAttribute('width', aspectRatio);
                         photoElement.setAttribute('height', 1);
                     };
-                    tempImg.src = src;
+                    tempImg.src = img.src;
                 }
             });
         </script>
