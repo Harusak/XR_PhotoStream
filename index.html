@@ -9,17 +9,19 @@
 <body>
     <script src="https://aframe.io/releases/1.2.0/aframe-inspector.min.js"></script>
     <a-scene>
+        <a-light type="directional" castShadow="true" position="5 5 5"></a-light>
+
         <!-- 左手のコントローラ -->
         <a-entity oculus-touch-controls="hand: left"></a-entity>
         <!-- 右手のコントローラ -->
         <a-entity oculus-touch-controls="hand: right"></a-entity>
 
         <!-- マスク用の平面エンティティを追加 -->
-        <a-entity id="mask-right" position="5.5 1.6 -1.89">
+        <a-entity id="mask-right" position="3.9 1.6 -1.89">
             <a-plane width="6" height="5" color="black" opacity="0"></a-plane>
         </a-entity>
 
-        <a-entity id="mask-left" position="-5.5 1.6 -1.89">
+        <a-entity id="mask-left" position="-3.9 1.6 -1.89">
             <a-plane width="6" height="5" color="black" opacity="0"></a-plane>
         </a-entity>
 
@@ -32,21 +34,21 @@
 
         <!-- -->
         <a-entity id="window" position="0 1.6 -2">
-            <a-plane id="window-plane" width="4" height="2" material="opacity: 0.5; color: #030303" border-radius="0.2"></a-plane>
+            <a-plane id="window-plane" width="1.6" height="1" material="opacity: 0.5; color: #030303" border-radius="0.2" receiveShadow="true"></a-plane>
         </a-entity>
 
         <a-assets>
             <!-- ここに写真のアセットを追加します -->
-            <img id="photo1" src="https://live.staticflickr.com/65535/53098018469_eb8b162a71_k.jpg">
-            <img id="photo2" src="https://live.staticflickr.com/65535/53324907283_21ad32570c_h.jpg">
-            <img id="photo3" src="https://live.staticflickr.com/65535/53098018469_eb8b162a71_k.jpg">
-            <img id="photo4" src="https://live.staticflickr.com/65535/53098018469_eb8b162a71_k.jpg">
-            <img id="photo5" src="https://live.staticflickr.com/65535/53098018469_eb8b162a71_k.jpg">
-            <img id="photo6" src="https://live.staticflickr.com/65535/53098018469_eb8b162a71_k.jpg">
-            <img id="photo7" src="https://live.staticflickr.com/65535/53098018469_eb8b162a71_k.jpg">
-            <img id="photo8" src="https://live.staticflickr.com/65535/53098018469_eb8b162a71_k.jpg">
-            <img id="photo9" src="https://live.staticflickr.com/65535/53098018469_eb8b162a71_k.jpg">
-            <img id="photo10" src="https://live.staticflickr.com/65535/53098018469_eb8b162a71_k.jpg">
+            <img id="photo1" src="https://live.staticflickr.com/65535/53098018469_eb8b162a71_k.jpg" castShadow="true">
+            <img id="photo2" src="https://live.staticflickr.com/65535/53324907283_21ad32570c_h.jpg" castShadow="true">
+            <img id="photo3" src="https://live.staticflickr.com/65535/53098018469_eb8b162a71_k.jpg" castShadow="true">
+            <img id="photo4" src="https://live.staticflickr.com/65535/53098018469_eb8b162a71_k.jpg" castShadow="true">
+            <img id="photo5" src="https://live.staticflickr.com/65535/53098018469_eb8b162a71_k.jpg" castShadow="true">
+            <img id="photo6" src="https://live.staticflickr.com/65535/53098018469_eb8b162a71_k.jpg" castShadow="true">
+            <img id="photo7" src="https://live.staticflickr.com/65535/53098018469_eb8b162a71_k.jpg" castShadow="true">
+            <img id="photo8" src="https://live.staticflickr.com/65535/53098018469_eb8b162a71_k.jpg" castShadow="true">
+            <img id="photo9" src="https://live.staticflickr.com/65535/53098018469_eb8b162a71_k.jpg" castShadow="true">
+            <img id="photo10" src="https://live.staticflickr.com/65535/53098018469_eb8b162a71_k.jpg" castShadow="true">
             <!-- 他の写真も同様に追加 -->
         </a-assets>
 
